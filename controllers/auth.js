@@ -1,11 +1,10 @@
-const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 const expressJwt = require("express-jwt");
 const _ = require("lodash");
 const { sendEmailWithNodemailer } = require("../helpers/email");
-
+const User = require("../models/user");
 exports.signup = (req, res) => {
   console.log(req.body);
   const { name, email, password } = req.body;
