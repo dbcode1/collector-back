@@ -1,5 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 const expressJwt = require("express-jwt");
 const _ = require("lodash");
 const { sendEmailWithNodemailer } = require("../helpers/email");
@@ -16,7 +18,7 @@ exports.signup = (req, res) => {
     }
 
     const token = jwt.sign({ name, email, password }, process.env.JWT_SECRET, {
-      expiresIn: "10m",
+      expiresIn: "30m",
     });
 
     const emailData = {
