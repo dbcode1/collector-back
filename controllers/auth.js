@@ -59,7 +59,6 @@ exports.accountActivation = (req, res) => {
           });
         }
         return res.json({
-          success: true,
           message: "Signup success. Please signin.",
         });
       });
