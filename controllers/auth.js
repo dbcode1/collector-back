@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 const expressJwt = require("express-jwt");
 const _ = require("lodash");
 const { sendEmailWithNodemailer } = require("../helpers/email");
@@ -104,7 +103,7 @@ exports.signin = (req, res) => {
 };
 
 exports.requireSignin = expressJwt({
-  secret: "secret",
+  secret: process.env.JWT_SECRET,
   algorithms: ["HS256"],
 });
 
