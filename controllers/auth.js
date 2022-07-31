@@ -4,8 +4,9 @@ const expressJwt = require("express-jwt");
 const _ = require("lodash");
 const { sendEmailWithNodemailer } = require("../helpers/email");
 const User = require("../models/user");
+
 exports.signup = (req, res) => {
-  console.log(req.body);
+
   const { name, email, password } = req.body;
 
   User.findOne({ email }).exec((err, user) => {
