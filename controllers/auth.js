@@ -25,12 +25,12 @@ exports.signup = (req, res) => {
       subject: "ACCOUNT ACTIVATION LINK",
       html: `
                 <h1>Please use the following link to activate your account</h1>
-                 <a href="https://collector1.netlify.app/auth/activate/${token}">${token}</a>
+                 <a href="http://localhost:3000/auth/activate/${token}">${token}</a>
                 <p>This email may contain sensitive information</p>
             `,
     };
 
-    sendEmailWithNodemailer(req, res, "emailData");
+    sendEmailWithNodemailer(req, res, emailData);
   });
 };
 
