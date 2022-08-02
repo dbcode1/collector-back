@@ -6,6 +6,7 @@ const { sendEmailWithNodemailer } = require("../helpers/email");
 const User = require("../models/user");
 
 exports.signup = (req, res) => {
+
   const { name, email, password } = req.body;
 
   User.findOne({ email }).exec((err, user) => {
@@ -147,7 +148,7 @@ exports.forgotPassword = (req, res) => {
       subject: "PASSWORD RESET LINK",
       html: `
                       <h1>Please use the following link to reset your password</h1>
-                      <a href="${process.env.REACT_APP_API}/auth/password/reset/${token}">Activate</a>
+                      <a href="${process.env.CLIENT_URL}/auth/password/reset/${token}">Activate</a>
                       <hr />
                       <p>This email may contain sensitive information</p>
         
