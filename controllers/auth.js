@@ -6,7 +6,6 @@ const { sendEmailWithNodemailer } = require("../helpers/email");
 const User = require("../models/user");
 
 exports.signup = (req, res) => {
-
   const { name, email, password } = req.body;
 
   User.findOne({ email }).exec((err, user) => {
@@ -26,7 +25,7 @@ exports.signup = (req, res) => {
       subject: "ACCOUNT ACTIVATION LINK",
       html: `
                 <h1>Please use the following link to activate your account</h1>
-                 <a href="http://localhost:3000/auth/activate/${token}">${token}</a>
+                 <a href="${process.env.CLIENT_URL}/auth/activate/${token}">${token}</a>
                 <p>This email may contain sensitive information</p>
             `,
     };
