@@ -136,7 +136,7 @@ exports.forgotPassword = (req, res) => {
     }
 
     const token = jwt.sign({ _id: user._id, name: user.name }, "skittles", {
-      expiresIn: "1h",
+      expiresIn: "10m",
     });
 
     const emailData = {
@@ -169,40 +169,36 @@ exports.resetPassword = (req, res) => {
   const { resetPasswordLink, newPassword } = req.body;
 
   if (resetPasswordLink) {
-    jwt.verify(
-      resetPasswordLink,
-      process.env.JWT_RESET_PASSWORD,
-      function (err, decoded) {
-        if (err) {
-          return res.status(400).json({
-            error: "Expired link. Try again. ",
-          });
-        }
-        User.findOne({ resetPasswordLink }, (err, user) => {
-          if (err || !user) {
-            return res.status(400).json({
-              error: "Something went wrong. Try later",
-            });
-          }
-
-          const updatedFields = {
-            password: newPassword,
-            resetPasswordLink: "",
-          };
-
-          user = _.extend(user, updatedFields);
-          user.save((err, result) => {
-            if (err) {
-              return res.status(400).json({
-                error: "Error reseting user password",
-              });
-            }
-            res.json({
-              message: "Great you can login with your new password",
-            });
-          });
+    jwt.verify(resetPasswordLink, "skittles", function (err, decoded) {
+      if (err) {
+        return res.status(400).json({
+          error: "Expired link. Try again. ",
         });
       }
-    );
+      User.findOne({ resetPasswordLink }, (err, user) => {
+        if (err || !user) {
+          return res.status(400).json({
+            error: "Something went wrong. Try later",
+          });
+        }
+
+        const updatedFields = {
+          password: newPassword,
+          resetPasswordLink: "",
+        };
+
+        user = _.extend(user, updatedFields);
+        user.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              error: "Error reseting user password",
+            });
+          }
+          res.json({
+            message: "Great you can login with your new password",
+          });
+        });
+      });
+    });
   }
 };
