@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // app.use(cors()); // allows all origins
 // if ((process.env.NODE_ENV = "development")) {
-  app.use(cors());
+  app.use(cors());   ``
 // }
 
 //solving cors issue

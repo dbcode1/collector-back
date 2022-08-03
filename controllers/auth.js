@@ -136,7 +136,7 @@ exports.forgotPassword = (req, res) => {
     }
 
     const token = jwt.sign({ _id: user._id, name: user.name }, "skittles", {
-      expiresIn: "10m",
+      expiresIn: "1h",
     });
 
     const emailData = {
