@@ -6,6 +6,8 @@ const { sendEmailWithNodemailer } = require("../helpers/email");
 const User = require("../models/user");
 
 exports.signup = (req, res) => {
+  console.log(req.body);
+  console.log("SIGNUP");
   const { name, email, password } = req.body;
 
   User.findOne({ email }).exec((err, user) => {
