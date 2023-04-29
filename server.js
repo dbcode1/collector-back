@@ -6,6 +6,11 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // connect to db
 app.use((req, res, next) => {
@@ -36,6 +41,7 @@ mongoose
 app.get("/", (req, res) => {
   res.send("hello world");
 });
+
 // import routes
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
@@ -47,10 +53,6 @@ const collectionsRoutes = require("./routes/collections");
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-//solving cors issue
-app.use(cors());
-console.log(app);
 
 // middleware
 app.use("/api", authRoutes);
