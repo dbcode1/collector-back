@@ -17,13 +17,13 @@ const http = rateLimit(axios.create(), {
 });
 http.getMaxRPS(); // 2
 const getImages = require("../helpers/wiki");
+const { Console } = require("console");
 
 exports.search = async (req, res) => {
   const searchTerm = req.query.q;
   let harvardData;
   let rijkData;
   const allArt = [];
-
 
   const harvard = () =>
     axios.get(
@@ -41,12 +41,13 @@ exports.search = async (req, res) => {
     );
 
   Promise.all([harvard(), rijk(), clev()])
-    .then((resp) => {
-      const harvard = resp[0].data;
-      const rijk = resp[1].data;
-      const clev = resp[2].data;
+    .then((response) => {
+      const harvard = response[0].data;
+      const rijk = response[1].data;
+      const clev = response[2].data;
 
       // format data
+
       const harvardFormatted = harvardFormatter(harvard, searchTerm);
 
       const rijkFormatted = rijkArtObject(rijk, searchTerm);
@@ -56,7 +57,7 @@ exports.search = async (req, res) => {
       // combine all data // concat
       const allArt = [...harvardFormatted, ...rijkFormatted, ...clevFormatted];
 
-      if (allArt.length < 2) {
+      if (allArt.length === 0) {
         res.status(400).send({ message: "No Results" });
       } else {
         res.status(200).json(allArt);
