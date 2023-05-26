@@ -10,7 +10,11 @@ exports.harvardFormatter = (data, searchTerm) => {
     //console.log("record", record);
     const type = record.classification;
     if (type === "Paintings" || type === "Drawings" || type === "Prints") {
-      if (record.primaryimageurl) {
+      if (
+        record.primaryimageurl &&
+        // TODO: refine search
+        record.people[0].displayname.includes(searchTerm)
+      ) {
         const artObj = {
           name: record.people ? record.people[0].displayname : "",
           title: record.title,
@@ -75,7 +79,9 @@ exports.clevelandArtObject = (data, searchTerm) => {
       console.log("no image");
       return;
     }
-
+    if(!item.creators[0].description.split("(")[0].includes(searchTerm)){
+      return;
+    }
     const artObj = {
       name: item.creators[0].description.split("(")[0],
       title: item.title.split(" ").splice(0, 6).join(" "),
