@@ -1,4 +1,50 @@
 const { default: axios } = require("axios");
+const { title } = require("process");
+
+exports.articArtFormatter = (data, searchTerm) => {
+  const articArtFormatted = [];
+  if (!title) {
+    return;
+  }
+
+  // url for each image
+  console.log("data", data)
+  const url = `${data.data.config.iiif_url}/${data.data.data.image_id}/full/843,/0/default.jpg`;
+  console.log(url);
+  const artObj = {
+    name: searchTerm,
+    title: title,
+    img: url,
+  };
+
+  articArtFormatted.push(artObj);
+
+  return articArtFormatted;
+};
+
+exports.metArtFormatter = (data, searchTerm) => {
+  const metArtObjects = [];
+  //  console.log("res", data.results);
+  if (!data.results) {
+    return;
+  }
+
+  data.results.map((result) => {
+    if (!result.image || !result.artist) {
+      return;
+    }
+
+    const artObj = {
+      name: result.artist || "",
+      title: result.title,
+      img: result.image,
+    };
+    if (artObj.name.toLowerCase().match(searchTerm.toLowerCase())) {
+      metArtObjects.push(artObj);
+    }
+  });
+  return metArtObjects;
+};
 
 exports.harvardFormatter = (data, searchTerm) => {
   const harvardArtObjects = [];
@@ -61,7 +107,6 @@ exports.rijkArtObject = (data, searchTerm) => {
       containerTitle: "",
     };
     if (artObj.img) {
-      console.log("rijk obj", artObj);
       rijkArtObjects.push(artObj);
     }
   });
@@ -79,7 +124,7 @@ exports.clevelandArtObject = (data, searchTerm) => {
       console.log("no image");
       return;
     }
-    if(!item.creators[0].description.split("(")[0].includes(searchTerm)){
+    if (!item.creators[0].description.split("(")[0].includes(searchTerm)) {
       return;
     }
     const artObj = {
@@ -91,7 +136,7 @@ exports.clevelandArtObject = (data, searchTerm) => {
     };
 
     allArtObjects.push(artObj);
-    console.log("clev artObj", artObj);
+    
   });
   return allArtObjects;
 };
