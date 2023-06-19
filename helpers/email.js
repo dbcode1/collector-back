@@ -9,7 +9,7 @@ exports.sendEmailWithNodemailer = (req, res, emailData) => {
     requireTLS: true,
     auth: {
       user: "dmbrusky@gmail.com",
-      pass: "iowsnrmlekipdnhd",
+      pass: "uuojqgiykktnkrwq",
     },
     tls: {
       ciphers: "SSLv3",
