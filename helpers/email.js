@@ -15,7 +15,7 @@ exports.sendEmailWithNodemailer = (req, res, emailData) => {
       ciphers: "SSLv3",
     },
   });
-
+  console.log("verification");
   return transporter
     .sendMail(emailData)
     .then((info) => {

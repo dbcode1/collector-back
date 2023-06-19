@@ -3,22 +3,8 @@ const {
   harvardFormatter,
   rijkArtObject,
   clevelandArtObject,
-  metArtFormatter,
-  artsyArtObject,
-  articArtFormatter,
+  metArtFormatter
 } = require("../helpers/artObject");
-
-const _ = require("lodash");
-
-const rateLimit = require("axios-rate-limit");
-const http = rateLimit(axios.create(), {
-  maxRequests: 30,
-  perMilliseconds: 1000,
-  maxRPS: 60,
-});
-http.getMaxRPS(); // 2
-const getImages = require("../helpers/wiki");
-const { Console } = require("console");
 
 exports.search = async (req, res) => {
   let allArt = [];
@@ -56,7 +42,7 @@ exports.search = async (req, res) => {
     //console.log("new refactored code", allArtic);
   };
 
-  articCall(searchTerm);
+  
 
   // MET ART
 
@@ -80,7 +66,7 @@ exports.search = async (req, res) => {
       `https://openaccess-api.clevelandart.org/api/artworks/?artists=${searchTerm}&has_image&limit=50`
     );
 
-  Promise.all([metArt(), harvard(), rijk(), clev()])
+  Promise.all([metArt(), harvard(), rijk(), clev(), articCall(searchTerm)])
     .then((response) => {
       //console.log("all", allArt);
       const met = response[0].data;
