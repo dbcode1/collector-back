@@ -3,10 +3,11 @@ const {
   harvardFormatter,
   rijkArtObject,
   clevelandArtObject,
-  metArtFormatter
+  metArtFormatter,
 } = require("../helpers/artObject");
 
 exports.search = async (req, res) => {
+  console.log("search");
   let allArt = [];
   let allArtic = [];
   const searchTerm = req.query.q;
@@ -42,8 +43,6 @@ exports.search = async (req, res) => {
     //console.log("new refactored code", allArtic);
   };
 
-  
-
   // MET ART
 
   const metArt = () =>
@@ -65,17 +64,22 @@ exports.search = async (req, res) => {
     axios.get(
       `https://openaccess-api.clevelandart.org/api/artworks/?artists=${searchTerm}&has_image&limit=50`
     );
-
-  Promise.all([metArt(), harvard(), rijk(), clev(), articCall(searchTerm)])
+  //Promise.all([metArt(), harvard(), rijk(), clev(), articCall(searchTerm)])
+  Promise.all([harvard(), rijk(), clev(), articCall(searchTerm)])
     .then((response) => {
       //console.log("all", allArt);
-      const met = response[0].data;
-      const harvard = response[1].data;
-      const rijk = response[2].data;
-      const clev = response[3].data;
+      // const met = response[0].data;
+      // const harvard = response[].data;
+      // const rijk = response[2].data;
+      // const clev = response[3].data;
+
+      // const met = response[0].data;
+      const harvard = response[0].data;
+      const rijk = response[1].data;
+      const clev = response[2].data;
 
       // format data()
-      const metFormatted = metArtFormatter(met, searchTerm);
+      // const metFormatted = metArtFormatter(met, searchTerm);
 
       const harvardFormatted = harvardFormatter(harvard, searchTerm);
 
@@ -85,7 +89,7 @@ exports.search = async (req, res) => {
 
       allArt = [
         ...allArtic,
-        ...metFormatted,
+        // ...metFormatted,
         ...harvardFormatted,
         ...rijkFormatted,
         ...clevFormatted,
@@ -97,6 +101,6 @@ exports.search = async (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(400).json({ message: err.message });
+      res.json({ message: err.message });
     });
 };

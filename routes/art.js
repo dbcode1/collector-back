@@ -7,6 +7,4 @@ const { search } = require('../controllers/search')
 
 router.get('/search', requireSignin, search)
 
-
-
 module.exports = router

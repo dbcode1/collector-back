@@ -16,11 +16,11 @@ exports.signup = (req, res) => {
         error: "Email is taken",
       });
     }
-
     const token = jwt.sign({ name, email, password }, process.env.JWT_SECRET, {
       expiresIn: "30m",
     });
-
+    
+console.log(process.env.CLIENT_URL)
     const emailData = {
       from: "dmbrusky@gmail.com",
       to: email,

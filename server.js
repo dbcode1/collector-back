@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const artRoutes = require("./routes/art");
-const cardRoutes = require("./routes/art");
+//const cardRoutes = require("./routes/art");
 const collectionsRoutes = require("./routes/collections");
 
 // app middlewares
@@ -42,10 +42,10 @@ app.use(bodyParser.json());
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", artRoutes);
-app.use("/api", cardRoutes);
+//app.use("/api", cardRoutes);
 app.use("/api", collectionsRoutes);
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`API is running on port ${port}`);
 });
