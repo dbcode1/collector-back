@@ -67,13 +67,6 @@ exports.search = async (req, res) => {
   //Promise.all([metArt(), harvard(), rijk(), clev(), articCall(searchTerm)])
   Promise.all([harvard(), rijk(), clev(), articCall(searchTerm)])
     .then((response) => {
-      //console.log("all", allArt);
-      // const met = response[0].data;
-      // const harvard = response[].data;
-      // const rijk = response[2].data;
-      // const clev = response[3].data;
-
-      // const met = response[0].data;
       const harvard = response[0].data;
       const rijk = response[1].data;
       const clev = response[2].data;
@@ -94,6 +87,8 @@ exports.search = async (req, res) => {
         ...rijkFormatted,
         ...clevFormatted,
       ];
+
+      console.log(rijkFormatted);
       if (allArt.length === 0) {
         return res.status(400).send({ message: "No Results" });
       } else {
