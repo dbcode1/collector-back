@@ -8,7 +8,7 @@ exports.articArtFormatter = (data, searchTerm) => {
   }
 
   // url for each image
-  console.log("data", data)
+  console.log("data", data);
   const url = `${data.data.config.iiif_url}/${data.data.data.image_id}/full/843,/0/default.jpg`;
   console.log(url);
   const artObj = {
@@ -22,52 +22,56 @@ exports.articArtFormatter = (data, searchTerm) => {
   return articArtFormatted;
 };
 
-exports.metArtFormatter = (data, searchTerm) => {
-  const metArtObjects = [];
-  //  console.log("res", data.results);
-  if (!data.results) {
-    return;
+exports.metArtFormatter = async (data, searchTerm) => {
+  let ids = [];
+
+  for (let i = 0; i < data.objectIDs.length; i++) {
+    console.log("ID", data.objectIDs[i], i);
+    ids.push(data.objectIDs[i]);
+    if (i > 5) {
+      break;
+    }
   }
+  console.log("IDS", ids);
 
-  data.results.map((result) => {
-    if (!result.image || !result.artist) {
-      return;
-    }
+  const metArtObjs = [];
+  await Promise.all(
+    ids.map(async (id) => {
+      const url = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`;
+      const call = await axios.get(url);
+      const artObj = {
+        name: call.data.artistDisplayName || "",
+        title: call.data.title,
+        img: call.data.primaryImage,
+      };
 
-    const artObj = {
-      name: result.artist || "",
-      title: result.title,
-      img: result.image,
-    };
-    if (artObj.name.toLowerCase().match(searchTerm.toLowerCase())) {
-      metArtObjects.push(artObj);
-    }
-  });
-  return metArtObjects;
+      if (artObj.name.toLowerCase().match(searchTerm.toLowerCase())) {
+        metArtObjs.push(artObj);
+      }
+    }),
+  );
+  console.log("Objs", metArtObjs);
+  return metArtObjs;
 };
 
 exports.harvardFormatter = (data, searchTerm) => {
+  //console.log("data", data);
   const harvardArtObjects = [];
   if (!data.records) {
     return;
   }
 
   data.records.map((record) => {
-    //console.log("record", record);
     const type = record.classification;
     if (type === "Paintings" || type === "Drawings" || type === "Prints") {
-      if (
-        record.primaryimageurl &&
-        // TODO: refine search
-        record.people[0].displayname.includes(searchTerm)
-      ) {
+      if (record.primaryimageurl) {
         const artObj = {
           name: record.people ? record.people[0].displayname : "",
           title: record.title,
           img: record.primaryimageurl,
           date: record.datebegin,
         };
-        // console.log("artObject", artObj);
+        //harvardArtObjects.push(artObj);
         if (artObj.name.toLowerCase().match(searchTerm.toLowerCase())) {
           harvardArtObjects.push(artObj);
         }
@@ -80,6 +84,7 @@ exports.harvardFormatter = (data, searchTerm) => {
 };
 
 exports.rijkArtObject = (data, searchTerm) => {
+  console.log("DATA", data);
   if (!data.artObjects) {
     return;
   }
@@ -111,32 +116,4 @@ exports.rijkArtObject = (data, searchTerm) => {
     }
   });
   return rijkArtObjects;
-};
-
-exports.clevelandArtObject = (data, searchTerm) => {
-  // create new obj with desired fields
-
-  const allArtObjects = [];
-  const values = Object.values(data.data);
-
-  values.map((item) => {
-    if (JSON.stringify(item.images) === "{}") {
-      console.log("no image");
-      return;
-    }
-    if (!item.creators[0].description.split("(")[0].includes(searchTerm)) {
-      return;
-    }
-    const artObj = {
-      name: item.creators[0].description.split("(")[0],
-      title: item.title.split(" ").splice(0, 6).join(" "),
-      img: item.images.web.url,
-      date: item.creation_date,
-      containerTitle: "",
-    };
-
-    allArtObjects.push(artObj);
-    
-  });
-  return allArtObjects;
 };
